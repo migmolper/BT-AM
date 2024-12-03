@@ -1,0 +1,55 @@
+# Ignore exe file
+exe-BT-AM
+run-BT-AMA*
+core.*
+
+# Ignore the node_modules directory
+node_modules/
+
+# Ignore DS_Store file
+**/.DS_Store
+
+# Ignore documentation files
+*.js
+
+# Ignore Logs
+logs
+*.log
+
+# Ignore .vtk files
+*.vtk
+*.vtp
+*.vtu
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Compile tex obj
+*.toc
+*.glo
+*.ist
+*.out
+*.ist
+*.aux
+*.pdf
+*.synctex.gz  
+*.fls
+*.fdb_latexmk
+
+# Ignore the content of some directories
+/build
+/coverage
+/docs
+/outputs
+
+# The file containing environment variables 
+.env    
+.cache
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.sw*

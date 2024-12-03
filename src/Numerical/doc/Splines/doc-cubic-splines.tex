@@ -1,0 +1,113 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+\usepackage[margin=2cm]{geometry} % Specify the desired margin size here
+
+\definecolor{codegray}{gray}{0.9}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codeblue}{rgb}{0,0,0.6}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{codegray},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{codeblue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codegreen},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Documentation for cubic-spline.cpp}
+\author{M. Molinos, J.M. Recio, M.P. Ariza}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+We use Spline approximation to interpolate tabulated functions in interatomic potentials downloaded from NIST.
+
+\section{General Mathematical Context}
+Cubic spline interpolation is a method used to approximate a smooth curve between a set of data points. It is commonly used in numerical analysis and computer graphics. The idea behind cubic splines is to divide the interval between each pair of adjacent data points into smaller subintervals and fit a cubic polynomial to each subinterval. 
+These cubic polynomials are then combined to form a piecewise-defined function that smoothly interpolates the data points.
+The advantage of using cubic splines is that they provide a good balance between accuracy and smoothness. Unlike other interpolation methods, such as linear interpolation, cubic splines can capture the curvature of the data and produce a more natural-looking curve. 
+Additionally, cubic splines are computationally efficient and can be easily evaluated at any point within the range of the data. In the context of the \textit{cubic-spline.cpp} file, the implementation provides a function \textit{cubic-spline} that takes a \textit{CubicSpline} object and a value $x$ as input. 
+It returns the interpolated value at $x$ using the cubic spline interpolation method. The `CubicSpline` object contains the necessary coefficients and data points for the interpolation. The cubic spline interpolation method can be mathematically represented as follows: 
+For each subinterval $[x_i, x_{i+1}]$, the cubic polynomial $S_i(x)$ is defined as:
+\[
+S_i(x) = a_i + b_i(x - x_i) + c_i(x - x_i)^2 + d_i(x - x_i)^3
+\]
+where $a_i$, $b_i$, $c_i$, and $d_i$ are the coefficients of the cubic polynomial. To determine the coefficients, the following conditions are imposed:
+\begin{enumerate}
+    \item Interpolation condition: $S_i(x_i) = y_i$ and $S_i(x_{i+1}) = y_{i+1}$, where $y_i$ and $y_{i+1}$ are the data points.
+    \item Continuity condition: $S_i'(x_{i+1}) = S_{i+1}'(x_{i+1})$ and $S_i''(x_{i+1}) = S_{i+1}''(x_{i+1})$, ensuring that the polynomials join smoothly at the data points.
+    \item Boundary conditions: Additional conditions can be imposed at the boundaries of the interval, such as specifying the values of the first derivative or second derivative.
+\end{enumerate}
+For further information on cubic spline interpolation, you can refer to the following references:
+
+\begin{enumerate}
+    \item Sauer, T. (2006). Numerical Analysis (2nd ed.). Pearson Education.
+    \item Burden, R. L., and Faires, J. D. (2010). Numerical Analysis (9th ed.). Cengage Learning.
+\end{enumerate} 
+By using the `cubic-spline.cpp` file, you can easily incorporate cubic spline interpolation into your own projects and applications, allowing you to accurately approximate smooth curves based on given data points.
+
+\section{Isoparametric Space of the Splines in SOLERA}
+In the context of cubic spline interpolation, an isoparametric space is often used to evaluate the spline. An isoparametric space is a parameter space that is defined based on the data points and their corresponding intervals. It allows for a more intuitive and convenient way to evaluate the spline at any point within the range of the data. To use an isoparametric space, we first define a normalized parameter $t$ that ranges from 0 to 1 within each interval $[x_i, x_{i+1}]$. This parameter represents the relative position of a point within the interval. For example, $t=0$ corresponds to the starting point of the interval, and $t=1$ corresponds to the ending point of the interval. To evaluate the spline at a specific point $x$, we first determine the interval $[x_i, x_{i+1}]$ that contains $x$. We then calculate the corresponding parameter $t$ using the formula:
+
+\[
+t = \frac{{x - x_i}}{{x_{i+1} - x_i}}
+\]
+Once we have the parameter $t$, we can evaluate the spline using the cubic polynomial $S_i(t)$ defined in the previous section:
+
+\[
+S_i(t) = a_i + b_i(t - t_i) + c_i(t - t_i)^2 + d_i(t - t_i)^3
+\]
+where $a_i$, $b_i$, $c_i$, and $d_i$ are the coefficients of the cubic polynomial, and $t_i$ is the parameter corresponding to the starting point of the interval. By using an isoparametric space, we can easily evaluate the spline at any point within the range of the data, without the need to perform complex calculations or transformations. It provides a more intuitive and convenient way to work with the spline interpolation method.
+
+\section{Code Overview}
+The `cubic-spline.cpp` file contains the implementation of cubic spline interpolation. Below is the complete source code:
+
+\begin{lstlisting}[language=C++]
+double cubic_spline(CubicSpline *cs, double x) {
+
+    double p = x / cs->dx;
+  
+    int m = static_cast<int>(p);
+  
+    m = IMIN(m, cs->n - 1);
+    p = p - m;
+    p = DMIN(p, 1);
+  
+    return cs->a[m] + (cs->b[m] + (cs->c[m] + cs->d[m] * p) * p) * p;
+  }
+\end{lstlisting}
+
+\textbf{Description:} This function evaluate a cubic spline at a given point $x$ using the coefficients stored in the `CubicSpline` object \texttt{cs}. The function first calculates the index $m$ corresponding to the interval containing $x$. It then computes the normalized distance $p$ within the interval and evaluates the cubic spline at $x$ using the coefficients $a$, $b$, $c$, and $d$ stored in the \texttt{CubicSpline} object. The function returns the interpolated value at $x$.
+
+\textbf{Parameters:}
+\begin{itemize}
+    \item \texttt{cs}: Spline coefficients.
+    \item \texttt{x}: Coordinate to evaluate the spline.
+\end{itemize}
+
+\textbf{Returns:} $y$ value of the spline at the given $x$ coordinate.
+
+
+\section{Usage Example}
+Visit the test file `test-cubic-spline.cpp` for an example of how to use the `cubic-spline.cpp` file.
+
+
+\end{document}

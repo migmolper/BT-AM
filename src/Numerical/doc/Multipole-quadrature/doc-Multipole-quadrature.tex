@@ -1,0 +1,235 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{makeidx}
+\usepackage{graphicx}
+\usepackage{cleveref}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\author{Miguel Molinos}
+\title{Multipole integration of the meanfield integrals \\ WORKING NOTES -- NOT FOR DISTRIBUTION }
+\begin{document}
+
+\maketitle
+
+\section{Introduction to multipoles}
+A general scheme for the approximation of integrals that is well-suited to the evaluation of phase-space, $\{{z}\} \equiv (\{{q}\}, \{{p}\})$, averages is multipole expansion.  Let $\mu$ be  a bounded measure over $\mathbb{R}^n$ and let $f\ \in\ C(\mathbb{R}^n)$.  We write the action of the measure $\mu$ on $f$ as
+\begin{equation} \label{eq:bounded-measure}
+\mu(f)\ =\ \int_{-\infty}^{+\infty} f(\{z\}) \, d\mu(\{z\}).
+\end{equation}
+with $z_i \equiv (q_i,p_i)$, $\bar{z}_i = (\bar{q}_i,\bar{p}_i)$, $z_i' = z_i - \bar{z}_i$. Conveniently, the m$^{th}$ order multipole expansion of the measure is
+\begin{equation} \label{eq:bounded-measure-mp}
+    \mu_m(f)\ =\ \int_{-\infty}^{+\infty} P_m(\{z'\}) \, f(\{z'\}) \, d\mu(\{z'\}).
+\end{equation}
+Where $P_m(\{{z}\})$ is defined as a linear combination of Hermite polynomials of degree less or equal m
+\begin{equation}
+    \label{eq:multipole-expansion-polynomial}
+        P_m(\{{z}\})\
+        =\
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        \exp\left( \frac{1}{2} \{{z}\}^T Q \{{z}\} \right)
+        D^\alpha
+        \exp\left( - \frac{1}{2} \{{z}\}^T Q \{{z}\} \right)\
+        =\
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        H_\alpha(\{{z}\}),
+\end{equation}
+where $\alpha$ is a multiindex in $\mathbb{N}^n_0$, and 
+\begin{equation}
+    \{z'\}^T Q \{z'\}\
+    \equiv\
+    \sum_{i=1}^N \frac{1}{2\bar{\sigma}_i^2}|{q}_i - \bar{{q}}_i|^2\
+    +\
+    \sum_{i=1}^N \frac{1}{2k_{\text{B}}T m_i}|{p}_i - \bar{{p}}_i|^2 .
+\end{equation}
+$D^\alpha$ can be deduced from the Rodriges formula (probabilist's Hermite polynomials)
+\begin{equation} \label{eq:Rodriges-formula-1D}
+    H_m(x)\ =\ e^{\frac{x^2}{2}} \, (-1)^{m} \, \frac{d^m e^{-\frac{x^2}{2}}}{dx^m}.
+\end{equation}
+The \cref{eq:Rodriges-formula-1D} can be easily extended to higher dimensions when the varibles are independent. For the particular case $z_i = q_i$, \cref{eq:multipole-expansion-polynomial} reduces to
+\begin{equation}
+    \label{eq:multipole-expansion-polynomial-II}
+    P_m(\{{z}\})
+    =
+    \sum_{|\alpha|\leq m}
+    c_\alpha
+    \prod_{i=1}^{N} \exp\left(\frac{1}{2\bar{\sigma}_i^2}|{q}_i - \bar{{q}}_i|^2 \right)
+    D^\alpha \exp\left(- \frac{1}{2\bar{\sigma}_i^2}|{q}_i - \bar{{q}}_i|^2 \right)\
+    =\
+    \sum_{|\alpha|\leq m}
+    c_\alpha
+    \prod_{i=1}^{N} H_\alpha(q_i),
+\end{equation}
+The multipole approximation of degree $k$ of $\mu$ is the measure $\mu_k$ such that
+\begin{equation}
+ \label{eq:multipole-approximation}
+\mu_k(f)\ =\ \sum_{|\alpha| \leq k} c_{\alpha} \, D^{\alpha} \, f(0)
+\end{equation}
+where the coefficients $\{c_{\alpha},  |\alpha| \leq k \}$ of the approximation are chosen such that the approximation is exact for polynomials of degree $\leq k$,  {\it i.e.},  such that
+\begin{equation}
+\mu_k (x^{\alpha})\ =\ \mu (x^{\alpha}), \quad |\alpha| \leq k 
+\end{equation}
+ This requirement gives
+ \begin{equation}
+ \label{eq:multipole-int-requirement}
+ c_{\alpha}\ =\ \frac{1}{\alpha !} \int_{-\infty}^{+\infty}  x^{\alpha} d\mu(x).
+ \end{equation}
+ 
+ \section{Multipole extension of the 1D Gaussian integral}
+ For one-dimensional Gaussian integrals, {\it i.e.} $\mathcal{N}(\bar{x} ,\sigma^{2})$, the measure is
+ \begin{equation} \label{eq:1d-gaussian-measure}
+ d\mu(x\ | \bar{x} ,\sigma^{2})\ =\ \frac{1}{\sigma\sqrt{2\pi}} \exp \left(-\frac{(x - \bar{x})^2}{2\sigma} \right) \, dx, 
+ \end{equation}
+where the corresponding coefficients can be computed explicitly. Substituting \cref{eq:1d-gaussian-measure} into 
+ \cref{eq:bounded-measure-mp} results in 
+ \begin{equation} \label{eq:eq:bounded-measure-mp-gaussian-1D}
+    \mu_m(f)\ =\ \int_{-\infty}^{+\infty} P_m(x) \, f(x) \, \frac{1}{\sigma\sqrt{2\pi}} \exp \left(-\frac{(x - \bar{x})^2}{2\sigma} \right) \, dx.
+ \end{equation}
+ Where the multipole polynomial is
+ \begin{equation}
+    \label{eq:multipole-expansion-polynomial-III}
+        P_m(x)
+        =
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        \exp\left( \frac{(x - \bar{x})^2}{2\sigma} \right)
+        D^\alpha
+        \exp\left( - \frac{(x - \bar{x})^2}{2\sigma} \right)
+        =
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        H_\alpha(x),
+\end{equation}
+ By doing the suitable variable change $x = \bar{x} + \sigma\sqrt{2}\xi$ we get
+ \begin{equation} \label{eq:eq:bounded-measure-mp-gaussian-1D-II}
+    \mu_m(f)\ =\ \int_{-\infty}^{+\infty} P_m(x) \, f(x) \, \exp \left(- \xi^2 \right) \, d\xi.
+ \end{equation}
+ and
+ \begin{equation}
+    \label{eq:multipole-expansion-polynomial-IV}
+        P_m(\xi)
+        =
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        \exp\left( \xi^2 \right)
+        D^\alpha
+        \exp\left( - \xi^2 \right)
+        =
+        \sum_{|\alpha|\leq m}
+        c_\alpha
+        H_\alpha(\xi),
+\end{equation}
+In order to calculate the coefficients $c_\alpha$
+
+ \begin{equation}
+ c_{\alpha}\ =\ \frac{1}{\alpha !} \sqrt{\frac{b}{\pi}} \int_{-\infty}^{+\infty}\ x^{\alpha} e^{-b x^2} dx\ =\ \frac{\sqrt{b}}{\alpha !} \frac{1}{\pi} \int_{-\infty}^{+\infty}\ x^{\alpha} e^{-b x^2} dx.
+ \end{equation}
+It is worth mentioning for this particular case the multiindex $\alpha \in \mathbb{N}_0^n$ collapses to a regular natural number defined in $\mathbb{N}_0$.  The former expression has  analytical using standard integral calculus rules
+\begin{equation}
+\frac{\sqrt{b}}{\alpha !} \frac{1}{\pi} \int_{-\infty}^{+\infty}\ x^{\alpha} e^{-b x^2} dx\ =\
+    \begin{cases}
+        \frac{\sqrt{b}}{\alpha !} \frac{2 I_{\alpha}(b)}{\sqrt{\pi}} & \text{if } \alpha\ \text{even}\\
+        0 & \text{if } \alpha\ \text{odd}.
+    \end{cases}
+\end{equation}
+Where $I_{\alpha}(b)$ is the general class of integrals of the form
+\begin{equation}
+I_{\alpha}(b)\ =\ \int_{0}^{+\infty} x^{\alpha} e^{-b x^2} dx\ =\ 
+\begin{cases}
+        \frac{(\alpha - 1)!! }{2^{\alpha/2 + 1} + b^{\alpha/2}}   \sqrt{\frac{\pi}{b}} & \text{if } \alpha\ \text{even}\\
+        &\\
+        \frac{\left[\frac{1}{2}(\alpha - 1) \right]!}{2 b^{(\alpha + 1)/2}} & \text{if } \alpha\ \text{odd}.
+    \end{cases}
+\end{equation}
+Substituting this results in () and undoing the variable change,  the coefficient $c_{\alpha}$ (when $\alpha$ even) can be evaluated as
+\begin{equation}
+c_{\alpha}\ =\  \frac{\sqrt{b}}{\alpha !} \frac{2}{\sqrt{\pi}}  \frac{(\alpha - 1)!! }{2^{\alpha/2 + 1} + b^{\alpha/2}}   \sqrt{\frac{\pi}{b}}\ =\ \frac{2^{\alpha/2} a^{-\alpha/2} \Gamma(\frac{\alpha + 1}{2})}{\sqrt{\pi} \alpha!}
+\end{equation}
+where $\Gamma$ stands for Euler\textquotesingle s gamma function.  The first five non-zero coefficients evaluate to
+\begin{equation}
+c_0 = 1,  \quad c_2 = \frac{1}{2a},  \quad c_4 = \frac{1}{8a^2},  \quad c_6 = \frac{1}{48a^3},\quad c_8 = \frac{1}{384a^4}
+\end{equation}
+ 
+\section{Multipole extension of the meanfield integral} 
+ 
+We wish to approximate the measure $\mu(V)$ of a potential V defined as
+\begin{equation}
+\label{eq:meanfield-V}
+\mu(V)\ =\ \int_{-\infty}^{+\infty}\ V(\{q\ -\ \bar{q}\},\{\chi\})\ \prod^{N}_{i} \frac{1}{(\sqrt{2\pi}\sigma_i)^3} \exp \left(- \frac{1}{2\sigma_i^2} |q_{i}\ -\ \bar{q}_{i}|^2\right) dq.
+\end{equation} 
+Where $q, \bar{q} \in \mathbb{R}^n$ denotes the instantaneous and mean position of a certain atomic site,  and $\chi$ stands for chemical potential.  The braces $\{\square\}$ denotes a collection of variables in N different sites.
+We start by doing the following  convenient variable change: $q - \bar{q} = \sigma\sqrt{2}\xi$. Introducing this changes in \cref{eq:meanfield-V}  results
+\begin{equation} \label{eq:meanfield-V-II}
+\mu(V)\ =\ \frac{1}{\pi^{3N/2}} \int_{-\infty}^{+\infty}\ V(\{\sigma\sqrt{2}\xi\},\{\chi\})\ \prod^{N}_{i} \exp \left(-|\xi_{i}|^2\right) d\xi.
+\end{equation}
+The multipole expansion of \cref{eq:meanfield-V-II} reads
+\begin{equation} \label{eq:meanfield-V-II-mp}
+\mu_m(V)\ =\ \frac{1}{\pi^{3N/2}} \sum_{|\alpha|\leq m} \int_{-\infty}^{+\infty}\ V(\{\sigma\sqrt{2}\xi\},\{\chi\})\ c_{\alpha} \prod^{N}_{i} D^{\alpha} \exp \left(-|\xi_{i}|^2\right) d\xi.
+\end{equation}
+The numerical approximation of \cref{eq:meanfield-V-II-mp}
+\begin{equation} \label{eq:meanfield-V-III-mp}
+    \mu_m(V)\ =\ \frac{1}{\pi^{3N/2}} \sum_{|\alpha|\leq m} \sum_{k}^{M}\ V(\{\sigma\sqrt{2}\xi^k\},\{\chi\})\ c_{\alpha} \prod^{N}_{i} D^{\alpha} \exp \left(-|\xi_{i}^{k}|^2\right).
+\end{equation}
+Where $M$ is the total number of integration points. The multipole approximation of degree $k$ of $\mu(V)$ is the measure $\mu_k(V)$ such that
+\begin{equation} \label{eq:meanfield-V-IV-mp}
+    \mu(V)\ \approx\ \mu_k(V(0))\ =\ \frac{1}{\pi^{3N/2}} \sum_{|\alpha| \leq m} V(\{\bar{q}\},\{\chi\}) c_{\alpha}\ \prod^{N}_{i} D^{\alpha} \left(0\right),
+\end{equation}
+Therefore, both V and $D^{\alpha}$ are evaluated at $\xi = 0$. Keeping in mind $c_{\alpha}$ has to fulfil the condition stated by \cref{eq:multipole-int-requirement},  extended to this particular case
+ \begin{equation}
+ \label{eq:multipole-int-requirement-multibody}
+ c_{\alpha}\ =\ \frac{\prod^{N}_{i} \sigma_i^{\alpha}\ 2^{\alpha/2}}{\pi^{3N/2} \alpha !} \prod^{N}_{i} \int_{-\infty}^{+\infty} |\xi_{i}|^{\alpha}\ \exp \left(-|\xi_{i}|^2\right) d\xi.
+ \end{equation}
+This expression can be easily evaluated exploiting the properties of the Gauss integral
+\begin{equation}
+    \label{eq:multipole-int-requirement-multibody-I}
+    c_{\alpha}\ =\ \frac{\prod^{N}_{i} \sigma_i^{\alpha}\ 2^{\alpha/2}}{\pi^{3N/2} \alpha !} \prod^{N}_{i} 2\ \Gamma_{\alpha}(1)\ =\ \frac{1}{\alpha !}\  \prod^{N}_{i} \frac{\sigma_i^{\alpha}\ 2^{\alpha/2}\ \Gamma(\frac{1+\alpha}{2})}{\pi^{3/2}}
+\end{equation}
+Introducing \cref{eq:multipole-int-requirement-multibody-I} at \cref{eq:meanfield-V-IV-mp} the monolope integral of \cref{eq:meanfield-V} can be obtained by evaluating the following expression
+\begin{equation} \label{eq:meanfield-V-V-mp}
+    \mu(V)\ \approx\ \frac{1}{\pi^{3N}} \sum_{|\alpha| \leq m} V(\{\bar{q}\},\{\chi\})\frac{1}{\alpha !}\  \prod^{N}_{i} \sigma_i^{\alpha}\ 2^{\alpha/2}\ \Gamma(\frac{1+\alpha}{2}) D^{\alpha} \left(0\right),
+\end{equation}
+
+\newpage
+ \appendix
+ 
+ \section{Multiindex}
+ 
+ Multi-index notation is a mathematical notation that simplifies formulas used in multivariable calculus, partial differential equations and the theory of distributions, by generalising the concept of an integer index to an ordered tuple of indices. An n-dimensional multi-index is an n-tuple
+\begin{equation}
+\alpha\ =\ \left(\alpha_1, \alpha_2,\ldots,\alpha_n \right)
+\end{equation}
+of non-negative integers ({\it i.e.} an element of the n-dimensional set of natural numbers, denoted $\mathbb{N}^n_0$ ). For multi-indices $\alpha, \beta\ \in \mathbb{N}^n_0$ and  $x = (x_1, x_2, \ldots, x_n) \in \mathbb{R}^n$ one defines:
+
+\paragraph{Componentwise sum and difference}
+\begin{equation}
+\alpha \pm \beta= (\alpha_1 \pm \beta_1,\,\alpha_2 \pm \beta_2, \ldots, \,\alpha_n \pm \beta_n)
+\end{equation}
+\paragraph{Partial order}
+\begin{equation}
+\alpha \le \beta \quad \Leftrightarrow \quad \alpha_i \le \beta_i \quad \forall\,i\in\{1,\ldots,n\}
+\end{equation}
+\paragraph{Absolute value}
+\begin{equation}
+| \alpha | = \alpha_1 + \alpha_2 + \cdots + \alpha_n
+\end{equation}
+\paragraph{Factorial}
+\begin{equation}
+\alpha ! = \alpha_1! \cdot \alpha_2! \cdots \alpha_n!
+\end{equation}
+\paragraph{Binomial coefficient} 
+\begin{equation}
+\binom{\alpha}{\beta} = \binom{\alpha_1}{\beta_1}\binom{\alpha_2}{\beta_2}\cdots\binom{\alpha_n}{\beta_n} = \frac{\alpha!}{\beta!(\alpha-\beta)!}
+\end{equation}
+\paragraph{Multinomial coefficient}
+\begin{align}
+\binom {k}{\alpha} =& \frac{k!}{\alpha _{1}!\alpha _{2}!\cdots \alpha _{n}!} = \frac {k!}{\alpha !}\\
+\text{where} \quad k :=& |\alpha |\in \mathbb {N} _{0}
+\end{align}
+\paragraph{Power}
+\begin{equation}
+x^\alpha = x_1^{\alpha_1} x_2^{\alpha_2} \ldots x_n^{\alpha_n}.
+\end{equation}
+\end{document}
